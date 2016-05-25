@@ -67,5 +67,8 @@ router.put('/quizzes/:quizId(\\d+)/comments/:commentId(\\d+)/accept',
 	                                               sessionController.loginRequired, 
 	                                               quizController.ownershipRequired, 
 	                                               commentController.accept);
+router.get('/author', function(req, res, next){
+	res.render('author');
+});
 
 module.exports = router;
