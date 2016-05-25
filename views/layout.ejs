@@ -38,6 +38,10 @@
         <a href="/quizzes">Preguntas</a>
         <a href="/users">Usuarios</a>
       </nav>
+      <form method="get" action="/quizzes">
+        <input type="text" name="search" value="" >
+        <input type="submit" value="Enviar">
+      </form>
 
        <section>
             <% if (messages.info) { %>

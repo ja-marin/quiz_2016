@@ -35,13 +35,34 @@ exports.ownershipRequired = function(req, res, next){
 
 // GET /quizzes
 exports.index = function(req, res, next) {
-	models.Quiz.findAll()
-		.then(function(quizzes) {
-			res.render('quizzes/index.ejs', { quizzes: quizzes});
-		})
-		.catch(function(error) {
-			next(error);
-		});
+	var format = req.params.format || 'html';
+  if(format === 'json'){
+    models.Quiz.findAll()
+    .then(function(quizzes){
+      res.send(JSON.stringify(quizzes) + '');
+    }).catch(function(error){
+      next(error);
+    });
+  }
+  else if(format === 'html'){
+    if(req.query.search){
+      models.Quiz.findAll({where: {question: {$like: "%"+req.query.search+"%" }},order: [['question', 'ASC']] })
+      .then(function(quizzes){
+        if(quizzes){  
+          res.render('quizzes/index.ejs',{quizzes:quizzes});
+        }
+        else{throw new Error('No existe ese quiz en la BBDD');}
+      }).catch(function(error){next(error);});
+    }else{
+      models.Quiz.findAll({order: [['question', 'ASC']]})
+      .then(function(quizzzes){
+          res.render('quizzes/index.ejs', {quizzes: quizzzes});
+        }).catch(function(error){next(error);});
+    }
+  }
+  else {
+    res.send('Formato erróneo')
+  }   
 };
 
 
