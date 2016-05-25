@@ -69,10 +69,27 @@ exports.index = function(req, res, next) {
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
 
-	var answer = req.query.answer || '';
-
-	res.render('quizzes/show', {quiz: req.quiz,
-								answer: answer});
+	var format = req.params.format || 'html';
+  if(format==='json'){
+    res.send(JSON.stringify(req.quiz) + '');
+  }
+  else if(format==='html'){
+    models
+    .Quiz
+    .findById(req.params.quizId)
+    .then(function(quiz){
+      if(quiz){
+        var answer=req.query.answer || '';
+        res.render('quizzes/show', {quiz: req.quiz, answer: answer});
+      }
+      else{
+        throw new Error('No existe ese quiz en la BBDD');
+      }
+    }).catch(function(error){
+      next(error);
+    });
+  }
+  else{res.send('Formato erróneo');}
 };
 
 
