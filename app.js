@@ -41,6 +41,23 @@ app.use(function(req, res, next) {
    next();
 });
 
+app.use(function(req, res, next){
+  if(!req.session.user || !req.session.user.expire) {next();}
+  else{
+    var date = new Date;
+    if(date.getTime()>req.session.user.expire){
+      req.flash('info', 'Tu sesión ha caducado');
+      delete req.session.user;
+    
+      res.redirect('/session');
+    }
+    else{
+      req.session.user.expire=date.getTime() + 120000;
+      next();
+    }
+  }
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
