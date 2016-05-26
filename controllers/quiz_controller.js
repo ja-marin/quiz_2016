@@ -191,7 +191,25 @@ exports.destroy = function(req, res, next) {
     });
 };
 
-
+exports.coment_author = function(req,res,next){
+  var coment_author;
+  models.User.findAll()
+  .then(function(users){
+    if(users){
+      for(var i in req.quiz.Comments){
+        for (var j in users){
+          if(req.quiz.Comments[i].AuthorId === usuarios[j].id){
+           coment_author[i]=usuarios[j].username;
+          }
+        }
+      }
+      req.quiz.coment_author= coment_author;
+      next()
+    }
+  }).catch(function(error){
+    req.flash('error', 'Error al cargar los autores de los comentarios');
+  })
+};
 
 
 

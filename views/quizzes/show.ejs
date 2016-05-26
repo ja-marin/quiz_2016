@@ -23,9 +23,10 @@
 <ul>
   <% for (var i in quiz.Comments) { 
        var comment = quiz.Comments[i];
+       var coment_author= quiz.coment_author[i];
        if (comment.accepted) { %>
 
-           <li> <%= comment.text %> </li>
+           <li> <%= comment.text %> realizado por el usuario: <%= coment_author %> </li>
 
        <% } else if (session.user && 
                      (session.user.isAdmin || (quiz.AuthorId === session.user.id))) { %>
